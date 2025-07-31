@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap - Alianza Solidaria de Conductores YANGO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #f1c40f;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .roadmap {
+            padding: 40px;
+            position: relative;
+        }
+
+        .timeline {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .stage {
+            display: flex;
+            align-items: center;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .stage:nth-child(1) { animation-delay: 0.2s; }
+        .stage:nth-child(2) { animation-delay: 0.4s; }
+        .stage:nth-child(3) { animation-delay: 0.6s; }
+        .stage:nth-child(4) { animation-delay: 0.8s; }
+
+        .stage-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: white;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .stage-1 .stage-icon { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .stage-2 .stage-icon { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .stage-3 .stage-icon { background: linear-gradient(135deg, #27ae60, #229954); }
+        .stage-4 .stage-icon { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+        .stage-content {
+            flex: 1;
+            margin-left: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+            position: relative;
+        }
+
+        .stage-1 .stage-content { border-left-color: #f39c12; }
+        .stage-2 .stage-content { border-left-color: #3498db; }
+        .stage-3 .stage-content { border-left-color: #27ae60; }
+        .stage-4 .stage-content { border-left-color: #9b59b6; }
+
+        .stage-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .stage-achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .achievement {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .achievement-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .stage-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-completed {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-active {
+            background: #dbeafe;
+            color: #3498db;
+            animation: pulse 2s infinite;
+        }
+
+        .status-upcoming {
+            background: #f3e8ff;
+            color: #9b59b6;
+        }
+
+        .connector {
+            position: absolute;
+            left: 39px;
+            top: 80px;
+            width: 2px;
+            height: calc(100% - 80px);
+            background: linear-gradient(to bottom, #bdc3c7, #ecf0f1);
+            display: none;
+        }
+
+        .stage:not(:last-child) .connector {
+            display: block;
+        }
+
+        .current-highlight {
+            position: relative;
+        }
+
+        .current-highlight::before {
+            content: "PUNTO ACTUAL";
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+            to { box-shadow: 0 0 20px rgba(52, 152, 219, 0.8); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .stats { gap: 20px; }
+            .stage { flex-direction: column; text-align: center; }
+            .stage-content { margin-left: 0; margin-top: 20px; }
+            .connector { display: none; }
+            .current-highlight::before { position: static; margin-bottom: 10px; display: inline-block; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Alianza Solidaria de Conductores YANGO</h1>
+            <p>Transformando el transporte digital con ética, solidaridad y resultados concretos</p>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Conductores Representados</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Sin Fines de Lucro</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Disponible</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Costos para Conductores</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="roadmap">
+            <div class="timeline">
+                <!-- ETAPA 1: FUNDACIÓN Y PREPARACIÓN -->
+                <div class="stage">
+                    <div class="stage-icon">🏗️</div>
+                    <div class="stage-content">
+                        <div class="stage-title">ETAPA 1 - Fundación y Preparación</div>
+                        <div class="stage-achievements">
+                            <div class="achievement">
+                                <span class="achievement-icon">🛡️</span>
+                                <span>Creación de la Alianza Solidaria</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">📊</span>
+                                <span>Diagnóstico de necesidades (encuesta activa)</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🏥</span>
+                                <span>Apoyo en Salud y Bienestar</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">💰</span>
+                                <span>Microcréditos y sistema de ahorro solidario</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">📚</span>
+                                <span>Capacitaciones en tránsito y servicio</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🤝</span>
+                                <span>Convenios con comercios aliados</span>
+                            </div>
+                        </div>
+                        <span class="stage-status status-completed">✅ Completado</span>
+                    </div>
+                    <div class="connector"></div>
+                </div>
+
+                <!-- ETAPA 2: PUNTO ACTUAL -->
+                <div class="stage current-highlight">
+                    <div class="stage-icon">⚡</div>
+                    <div class="stage-content">
+                        <div class="stage-title">ETAPA 2 - Consolidación Activa</div>
+                        <div class="stage-achievements">
+                            <div class="achievement">
+                                <span class="achievement-icon">🎯</span>
+                                <span>Representación activa de conductores YANGO</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🎁</span>
+                                <span>Primer paquete de beneficios disponible</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">📱</span>
+                                <span>Difusión masiva por WhatsApp</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">📋</span>
+                                <span>Construcción del Directorio de Aliados</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">⚖️</span>
+                                <span>Asesoría legal gratuita activa</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🧠</span>
+                                <span>Apoyo psicológico especializado</span>
+                            </div>
+                        </div>
+                        <span class="stage-status status-active">🔥 En Ejecución</span>
+                        <p style="margin-top: 15px; font-style: italic; color: #3498db; font-weight: 500;">
+                            "La alianza ya es real, activa y creciendo con beneficios tangibles"
+                        </p>
+                    </div>
+                    <div class="connector"></div>
+                </div>
+
+                <!-- ETAPA 3: PRÓXIMOS PASOS -->
+                <div class="stage">
+                    <div class="stage-icon">🚀</div>
+                    <div class="stage-content">
+                        <div class="stage-title">ETAPA 3 - Expansión y Formalización</div>
+                        <div class="stage-achievements">
+                            <div class="achievement">
+                                <span class="achievement-icon">📝</span>
+                                <span>Firma de nuevos convenios estratégicos</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🏢</span>
+                                <span>Reunión oficial con YANGO Colombia</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🎯</span>
+                                <span>Plan Piloto con conductores líderes</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">📊</span>
+                                <span>Publicación mensual de resultados</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">💳</span>
+                                <span>Lanzamiento Fondo de Ahorro Solidario</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🎓</span>
+                                <span>Capacitación continua especializada</span>
+                            </div>
+                        </div>
+                        <span class="stage-status status-upcoming">📅 Próximos 3-6 meses</span>
+                    </div>
+                    <div class="connector"></div>
+                </div>
+
+                <!-- ETAPA 4: VISIÓN A FUTURO -->
+                <div class="stage">
+                    <div class="stage-icon">🏆</div>
+                    <div class="stage-content">
+                        <div class="stage-title">ETAPA 4 - Liderazgo y Expansión Nacional</div>
+                        <div class="stage-achievements">
+                            <div class="achievement">
+                                <span class="achievement-icon">🛡️</span>
+                                <span>Conductores completamente protegidos</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🤝</span>
+                                <span>Reconocimiento oficial de YANGO</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🇨🇴</span>
+                                <span>Expansión a otras ciudades de Colombia</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">⭐</span>
+                                <span>Referente nacional en regulación ética</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🌎</span>
+                                <span>Modelo replicable internacionalmente</span>
+                            </div>
+                            <div class="achievement">
+                                <span class="achievement-icon">🏛️</span>
+                                <span>Primera plataforma ética certificada</span>
+                            </div>
+                        </div>
+                        <span class="stage-status status-upcoming">🌟 Visión 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            "La transformación del transporte digital comienza con los conductores. Y ya empezó."
+        </div>
+    </div>
+</body>
+</html>
